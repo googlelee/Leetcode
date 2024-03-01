@@ -1,34 +1,17 @@
 public class Solution {
-    public boolean isPalindrome(ListNode head) {
-        // 找到中点
+    public boolean hasCycle(ListNode head) {
         ListNode fast = head;
         ListNode slow = head;
-        while (fast != null && fast.next != null && fast.next.next != null) {
+        while (fast != null) {
+            if (fast.next != null) {
+                fast = fast.next.next;
+            } else {
+                return false;
+            }
             slow = slow.next;
-            fast = fast.next.next;
+            if (fast == slow) return true;
         }
-
-        ListNode newHead = reverse(slow.next);
-        slow.next = null;
-        while (head != null && newHead != null) {
-            if (head.val != newHead.val) return false;
-            head = head.next;
-            newHead = newHead.next;
-        }
-        if (head != null) return head.next == null;
-        if (newHead != null) return newHead.next == null;
-        return true;
-    }
-
-    private ListNode reverse(ListNode head) {
-        ListNode newHead = null;
-        while (head != null) {
-            ListNode temp = head.next;
-            head.next = newHead;
-            newHead = head;
-            head = temp;
-        }
-        return newHead;
+        return false;
     }
 
     public static void main(String[] args) {
@@ -45,8 +28,8 @@ public class Solution {
         a2.next = c1;
 
         c1.next = c2;
-//        c2.next = c3;
-        System.out.println(s.isPalindrome(a1));
+        c2.next = a2;
+        System.out.println(s.hasCycle(a1));
     }
 }
 
