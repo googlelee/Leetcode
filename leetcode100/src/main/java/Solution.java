@@ -1,21 +1,25 @@
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Solution {
-    public int[] twoSum(int[] nums, int target) {
-        Map<Integer, Integer> hash = new HashMap<>();
+    public void moveZeroes(int[] nums) {
+        int j = 0;
         for (int i = 0; i < nums.length; i++) {
-            if (hash.containsKey(target-nums[i])) {
-                return new int[]{hash.get(target - nums[i]), i};
+            if (nums[i] != 0) {
+                if (i != j) { // 考虑 i=j的情况
+                    nums[j] = nums[i];
+                    nums[i] = 0;
+                }
+                j++;
             }
-            hash.put(nums[i], i);
         }
-        return new int[0];
+//        for (int i = 0; i < nums.length; i++) {
+//            System.out.println(nums[i]);
+//        }
     }
+
     public static void main(String[] args) {
         Solution s = new Solution();
-        int[] nums = {2,7,11,15};
-        System.out.println(Arrays.toString(s.twoSum(nums, 9)));
+        int[] nums = {1};
+        s.moveZeroes(nums);
     }
 }
