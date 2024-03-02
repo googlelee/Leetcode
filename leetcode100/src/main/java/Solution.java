@@ -1,35 +1,26 @@
-import java.util.ArrayList;
-import java.util.List;
-
 class Solution {
-    public List<List<Integer>> generate(int numRows) {
-        List<List<Integer>> res = new ArrayList<>();
-        List<Integer> first = new ArrayList<>();
-        first.add(1);
-        res.add(first);
-        if (numRows == 1) return res;
-
-        for (int i = 1; i < numRows; i++) {
-            List<Integer> row = new ArrayList<>();
-            List<Integer> lastRow = res.getLast();
-
-            for (int j = 0; j < lastRow.size(); j++) {
-                int num;
-                if (j - 1 >= 0) {
-                    num = lastRow.get(j) + lastRow.get(j - 1);
+    public int maxArea(int[] height) {
+        int left = 0;
+        int right = height.length - 1;
+        int res = 0;
+        while (left < right) {
+            int h = Math.min(height[left], height[right]);
+            int area = h * (right - left);
+            if (area > res) {
+                res = area;
+            } else {
+                if (height[left] >= height[right]) {
+                    right--;
                 } else {
-                    num = lastRow.get(j);
+                    left++;
                 }
-                row.add(num);
             }
-            row.add(1);
-            res.add(row);
         }
         return res;
     }
-
     public static void main(String[] args) {
         Solution s = new Solution();
-        System.out.println(s.generate(5));
+        int[] heights = new int[]{1,8,6,2,5,4,8,3,7};
+        System.out.println(s.maxArea(heights));
     }
 }
