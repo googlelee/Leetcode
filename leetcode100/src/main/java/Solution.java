@@ -1,23 +1,27 @@
+import java.util.Stack;
 
 class Solution {
-    public int searchInsert(int[] nums, int target) {
-        int left = 0, right = nums.length - 1;
-        while (left != right) {
-            if (target > nums[left]) {
-                left++;
+    public boolean isValid(String s) {
+        Stack<Character> stack = new Stack<>();
+        for (int i = 0; i < s.length(); i++) {
+            if (canMatch(s, i, stack)) {
+                stack.pop();
             } else {
-                right--;
+                stack.push(s.charAt(i));
             }
         }
-        if (nums[left] < target) left++;
-        return left;
+        return stack.isEmpty();
+    }
+
+    private static boolean canMatch(String s, int i, Stack<Character> stack) {
+        if (stack.isEmpty()) return false;
+        return (s.charAt(i) == ')' && stack.peek() == '(')
+                || (s.charAt(i) == '}' && stack.peek() == '{')
+                || (s.charAt(i) == ']' && stack.peek() == '[');
     }
 
     public static void main(String[] args) {
-
         Solution s = new Solution();
-        int[] nums = new int[] {1,3,5,6};
-
-        System.out.println(s.searchInsert(nums, 5));
+        System.out.println(s.isValid("(){}"));
     }
 }
