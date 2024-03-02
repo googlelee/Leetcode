@@ -1,23 +1,19 @@
 import java.util.Stack;
 
 class Solution {
-    public int maxProfit(int[] prices) {
-        int min = prices[0];
-        int max = 0;
-        for (int i = 0; i < prices.length; i++) {
-            if (min > prices[i]) {
-                min = prices[i];
-            }
-            if (prices[i] - min > max) {
-                max = prices[i] - min;
-            }
+    public int climbStairs(int n) {
+        if (n == 1) return 1; // 边界
+        int[] cnts = new int[n + 1];
+        cnts[1] = 1;
+        cnts[2] = 2;
+        for (int i = 3; i < n + 1; i++) {
+            cnts[i] = cnts[i - 1] + cnts[i - 2];
         }
-        return max;
+        return cnts[n];
     }
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        int[] prices = new int[]{7,6,4,3,1};
-        System.out.println(s.maxProfit(prices));
+        System.out.println(s.climbStairs(3));
     }
 }
