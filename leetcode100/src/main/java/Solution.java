@@ -1,27 +1,23 @@
 import java.util.Stack;
 
 class Solution {
-    public boolean isValid(String s) {
-        Stack<Character> stack = new Stack<>();
-        for (int i = 0; i < s.length(); i++) {
-            if (canMatch(s, i, stack)) {
-                stack.pop();
-            } else {
-                stack.push(s.charAt(i));
+    public int maxProfit(int[] prices) {
+        int min = prices[0];
+        int max = 0;
+        for (int i = 0; i < prices.length; i++) {
+            if (min > prices[i]) {
+                min = prices[i];
+            }
+            if (prices[i] - min > max) {
+                max = prices[i] - min;
             }
         }
-        return stack.isEmpty();
-    }
-
-    private static boolean canMatch(String s, int i, Stack<Character> stack) {
-        if (stack.isEmpty()) return false;
-        return (s.charAt(i) == ')' && stack.peek() == '(')
-                || (s.charAt(i) == '}' && stack.peek() == '{')
-                || (s.charAt(i) == ']' && stack.peek() == '[');
+        return max;
     }
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        System.out.println(s.isValid("(){}"));
+        int[] prices = new int[]{7,6,4,3,1};
+        System.out.println(s.maxProfit(prices));
     }
 }
