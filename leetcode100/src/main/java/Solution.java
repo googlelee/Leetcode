@@ -11,29 +11,23 @@ class Solution {
             }
         }
         int[] res = new int[k];
-        PriorityQueue<List<Integer>> priorityQueue = new PriorityQueue<>(new Comparator<List<Integer>>() {
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(new Comparator<Integer>() {
             @Override
-            public int compare(List<Integer> o1, List<Integer> o2) {
-                return o1.getLast() - o2.getLast();
+            public int compare(Integer o1, Integer o2) {
+                return hashMap.get(o1) - hashMap.get(o2);
             }
         });
         for (Integer num : hashMap.keySet()) {
             if (priorityQueue.size() < k) {
-                List<Integer> list = new ArrayList<>();
-                list.add(num);
-                list.add(hashMap.get(num));
-                priorityQueue.add(list);
-            } else if (hashMap.get(num) > priorityQueue.peek().getLast()){
+                priorityQueue.add(num);
+            } else if (hashMap.get(num) > hashMap.get(priorityQueue.peek())){
                 priorityQueue.poll();
-                List<Integer> list1 = new ArrayList<>();
-                list1.add(num);
-                list1.add(hashMap.get(num));
-                priorityQueue.add(list1);
+                priorityQueue.add(num);
             }
         }
         int i = 0;
         while (!priorityQueue.isEmpty()) {
-            res[i++] = priorityQueue.poll().getFirst();
+            res[i++] = priorityQueue.poll();
         }
         return res;
     }
@@ -42,7 +36,7 @@ class Solution {
 
         Solution s = new Solution();
 
-        int[] nums = {1,1,1,2,2,3};
+        int[] nums = {4,1,-1,2,-1,2,3};
         System.out.println(Arrays.toString(s.topKFrequent(nums, 2)));
     }
 }
