@@ -1,46 +1,22 @@
+import java.lang.management.BufferPoolMXBean;
 import java.util.*;
 
 class Solution {
     public ListNode swapPairs(ListNode head) {
-        List<ListNode> odd = new ArrayList<>();
-        List<ListNode> even = new ArrayList<>();
-        int cnt = 0;
-        while (head != null) {
-            if (cnt % 2 == 0) {
-                odd.add(head);
-            } else {
-                even.add(head);
-            }
-            head = head.next;
-            cnt++;
+        ListNode pre = new ListNode(0);
+        pre.next = head;
+        ListNode temp = pre;
+        while (temp.next != null && temp.next.next != null) {
+            ListNode start = temp.next;
+            ListNode end = temp.next.next;
+            temp.next = end;
+            start.next = end.next;
+            end.next = start;
+            temp = start; // 这一步很重要 容易晕
         }
-        ListNode p = new ListNode();
-        ListNode newHead = p;
-        int i = 0, j = 0;
-        int s = 0;
-        while (s < cnt) {
-            if (s % 2 != 0 && i < odd.size()) {
-                odd.get(i).next = null;
-                p.next = odd.get(i++);
-                p = p.next;
-            }
-            if (s % 2 == 0 && j < even.size()){
-                even.get(j).next = null;
-                p.next = even.get(j++);
-                p = p.next;
-            }
-            s++;
-        }
-        while (i < odd.size()) {
-            odd.get(i).next = null;
-            p.next = odd.get(i++);
-        }
-        while (j < even.size()) {
-            odd.get(j).next = null;
-            p.next = even.get(j++);
-        }
-        return newHead.next;
+        return pre.next;
     }
+
 
     public static void main(String[] args) {
 
