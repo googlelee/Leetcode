@@ -1,39 +1,31 @@
-import java.lang.management.BufferPoolMXBean;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 class Solution {
-    // dfs
-    public boolean isSymmetric(TreeNode root) {
-        if (root.left == null && root.right == null) return true;
-        return isSymmetricBoth(root.left, root.right);
-    }
-
-    private boolean isSymmetricBoth(TreeNode left, TreeNode right) {
-        if (left == null && right == null) return true;
-        if (left == null || right == null) return false;
-        if (left.val != right.val) return false;
-        return isSymmetricBoth(left.left, right.right) && isSymmetricBoth(left.right, right.left);
-    }
-
     // bfs
-    // public boolean isSymmetric(TreeNode root) {
-    //     if (root.left == null && root.right == null) return true;
-    //     List<TreeNode> queue = new LinkedList<>();
-    //     queue.add(root.left);
-    //     queue.add(root.right);
-    //     while (!queue.isEmpty()) {
-    //         TreeNode left = queue.removeFirst();
-    //         TreeNode right = queue.removeFirst();
-    //         if (left == null && right == null) continue;
-    //         if (left == null || right == null) return false;
-    //         if (left.val != right.val) return false;
-    //         queue.add(left.left);
-    //         queue.add(right.right);
-    //         queue.add(left.right);
-    //         queue.add(right.left);
-    //     }
-    //     return true;
-    // }
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> res = new ArrayList<>();
+        if (root == null) return res;
+        List<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            int n = queue.size();
+            List<Integer> layer = new ArrayList<>();
+            while (n-- != 0) {
+                TreeNode temp = queue.removeFirst();
+                if (temp.left != null) {
+                    queue.add(temp.left);
+                }
+                if (temp.right != null) {
+                    queue.add(temp.right);
+                }
+                layer.add(temp.val);
+            }
+            res.add(layer);
+        }
+        return res;
+    }
 
 
     public static void main(String[] args) {
@@ -52,21 +44,11 @@ class Solution {
         a.left = b;
         a.right = c;
         b.left = d;
-        // b.right = e;
-        c.left = e;
-        // c.right = g;
+        b.right = e;
+        c.left = f;
+        c.right = g;
 
-        // TreeNode root = s.invertTree(a);
-        // List<Integer> res = new LinkedList<>();
-        // frontOrder(root, res);
-        System.out.println(s.isSymmetric(a));
-    }
-
-    private static void frontOrder(TreeNode root, List<Integer> res) {
-        if (root == null) return;
-        res.add(root.val);
-        frontOrder(root.left, res);
-        frontOrder(root.right, res);
+        System.out.println(s.levelOrder(a));
     }
 }
 
@@ -74,8 +56,14 @@ class TreeNode {
     int val;
     TreeNode left;
     TreeNode right;
-    TreeNode() {}
-    TreeNode(int val) { this.val = val; }
+
+    TreeNode() {
+    }
+
+    TreeNode(int val) {
+        this.val = val;
+    }
+
     TreeNode(int val, TreeNode left, TreeNode right) {
         this.val = val;
         this.left = left;
