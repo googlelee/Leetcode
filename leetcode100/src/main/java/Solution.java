@@ -1,18 +1,33 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 class Solution {
-    public List<Integer> inorderTraversal(TreeNode root) {
-        List<Integer> res = new ArrayList<>();
-        inorder(root, res);
-        return res;
-    }
+    // dfs
+    // public int maxDepth(TreeNode root) {
+    //     if (root == null) return 0;
+    //     return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
+    // }
 
-    private void inorder(TreeNode root, List<Integer> res) {
-        if (root == null) return;
-        inorder(root.left, res);
-        res.add(root.val);
-        inorder(root.right, res);
+    // bfs
+    public int maxDepth(TreeNode root) {
+        if (root == null) return 0;
+        int depth = 0;
+        // 用 LinkedList 因为移除头部元素复杂度为O(1) ArrayList 复杂度是O(n)
+        List<TreeNode> queue = new LinkedList<>();
+        queue.add(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            while (size-- != 0) {
+                TreeNode treeNode = queue.removeFirst();
+                if (treeNode.left != null) {
+                    queue.add(treeNode.left);
+                }
+                if (treeNode.right != null) {
+                    queue.add(treeNode.right);
+                }
+            }
+            depth++;
+        }
+        return depth;
     }
 
 
@@ -27,7 +42,7 @@ class Solution {
         a.right = b;
         b.left = c;
 
-        System.out.println(s.inorderTraversal(a));
+        System.out.println(s.maxDepth(a));
     }
 }
 
