@@ -1,48 +1,34 @@
 import java.util.*;
 
 class Solution {
-//    public int[] dailyTemperatures(int[] temperatures) {
-//        int[] res = new int[temperatures.length];
-//        Stack<List<Integer>> stack = new Stack<>();
-//        for (int i = 0; i < temperatures.length; i++) {
-//            if (stack.isEmpty() || stack.peek().get(1) >= temperatures[i]) {
-//                List<Integer> list = new ArrayList<>();
-//                list.add(i);
-//                list.add(temperatures[i]);
-//                stack.push(list);
-//            } else {
-//                while (!stack.isEmpty() && stack.peek().get(1) < temperatures[i]) {
-//                    res[stack.peek().getFirst()] = i - stack.peek().getFirst();
-//                    stack.pop();
-//                }
-//                List<Integer> list = new ArrayList<>();
-//                list.add(i);
-//                list.add(temperatures[i]);
-//                stack.push(list);
-//            }
-//        }
-//        res[temperatures.length - 1] = 0;
-//        return res;
-//    }
+    public int findKthLargest(int[] nums, int k) {
+        // 大顶堆
+        // PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(new Comparator<Integer>() {
+        //     @Override
+        //     public int compare(Integer o1, Integer o2) {
+        //         return o2 - o1;
+        //     }
+        // });
 
-    public int[] dailyTemperatures(int[] temperatures) {
-        int[] res = new int[temperatures.length];
-        Stack<Integer> stack = new Stack<>();
-        for (int i = 0; i < temperatures.length; i++) {
-            while (!stack.isEmpty() && temperatures[stack.peek()] < temperatures[i]) {
-                res[stack.peek()] = i - stack.peek();
-                stack.pop();
+        // 默认为小顶堆
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
+        for (int i = 0; i < nums.length; i++) {
+            if (i < k) priorityQueue.add(nums[i]);
+            else {
+                if (priorityQueue.peek() < nums[i]) {
+                    priorityQueue.poll();
+                    priorityQueue.add(nums[i]);
+                }
             }
-            stack.push(i);
         }
-        return res;
+        return priorityQueue.peek();
     }
 
     public static void main(String[] args) {
 
         Solution s = new Solution();
 
-        int[] nums = {73,74,75,71,69,72,76,73};
-        System.out.println(Arrays.toString(s.dailyTemperatures(nums)));
+        int[] nums = {3, 2, 3, 1, 2, 4, 5, 5, 6};
+        System.out.println(s.findKthLargest(nums, 4));
     }
 }
