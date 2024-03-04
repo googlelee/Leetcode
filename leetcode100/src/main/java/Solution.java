@@ -2,47 +2,61 @@ import java.util.*;
 
 class Solution {
     // dfs
-    // public int maxDepth(TreeNode root) {
-    //     if (root == null) return 0;
-    //     return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
+    // public TreeNode invertTree(TreeNode root) {
+    //     if (root == null) return null;
+    //     TreeNode temp = root.right;
+    //     root.right = root.left;
+    //     root.left= temp;
+    //     invertTree(root.left);
+    //     invertTree(root.right);
+    //     return root;
     // }
 
     // bfs
-    public int maxDepth(TreeNode root) {
-        if (root == null) return 0;
-        int depth = 0;
-        // 用 LinkedList 因为移除头部元素复杂度为O(1) ArrayList 复杂度是O(n)
+    public TreeNode invertTree(TreeNode root) {
+        if (root == null) return null;
         List<TreeNode> queue = new LinkedList<>();
         queue.add(root);
         while (!queue.isEmpty()) {
-            int size = queue.size();
-            while (size-- != 0) {
-                TreeNode treeNode = queue.removeFirst();
-                if (treeNode.left != null) {
-                    queue.add(treeNode.left);
-                }
-                if (treeNode.right != null) {
-                    queue.add(treeNode.right);
-                }
+            TreeNode front = queue.removeFirst();
+            TreeNode temp = front.left;
+            front.left = front.right;
+            front.right = temp;
+            if (front.left != null) {
+                queue.add(front.left);
             }
-            depth++;
+            if (front.right != null) {
+                queue.add(front.right);
+            }
         }
-        return depth;
+        return root;
     }
+
+
 
 
     public static void main(String[] args) {
 
         Solution s = new Solution();
 
-        TreeNode a = new TreeNode(1);
-        TreeNode b = new TreeNode(2);
-        TreeNode c = new TreeNode(3);
+        TreeNode a = new TreeNode(2);
+        TreeNode b = new TreeNode(3);
+        TreeNode c = new TreeNode(1);
 
         a.right = b;
-        b.left = c;
+        a.left = c;
 
-        System.out.println(s.maxDepth(a));
+        TreeNode root = s.invertTree(a);
+        List<Integer> res = new LinkedList<>();
+        frontOrder(root, res);
+        System.out.println(res);
+    }
+
+    private static void frontOrder(TreeNode root, List<Integer> res) {
+        if (root == null) return;
+        res.add(root.val);
+        frontOrder(root.left, res);
+        frontOrder(root.right, res);
     }
 }
 
