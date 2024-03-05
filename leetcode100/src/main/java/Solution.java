@@ -1,21 +1,19 @@
-import java.util.*;
-
 class Solution {
-    public int longestConsecutive(int[] nums) {
-        int max = 0;
-        Set<Integer> numSet = new HashSet<>();
-        for (int num : nums) {
-            numSet.add(num);
-        }
-        for (Integer i : numSet) {
-            // 不剪枝会超时
-            if (!numSet.contains(i - 1)) {
-                int k = 0;
-                while (numSet.contains(i++)) k++;
-                if (max < k) max = k;
+    public int findDuplicate(int[] nums) {
+        int left = 1, right = nums.length - 1;
+        while (left < right) {
+            int mid = (left + right) / 2;
+            int cnt = 0;
+            for (int num : nums) {
+                if (num <= mid) cnt++;
+            }
+            if (cnt > mid) {
+                right = mid;
+            } else {
+                left = mid + 1;
             }
         }
-        return max;
+        return left;
     }
 
 
@@ -23,8 +21,8 @@ class Solution {
 
         Solution s = new Solution();
 
-        int[] nums = {100, 4, 200, 1, 3, 2};
-        System.out.println(s.longestConsecutive(nums));
+        int[] nums = {3, 1, 3, 4, 2};
+        System.out.println(s.findDuplicate(nums));
 
     }
 }
