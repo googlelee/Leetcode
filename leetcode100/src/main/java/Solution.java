@@ -1,54 +1,52 @@
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-
 class Solution {
-    // bfs
-    public List<List<Integer>> levelOrder(TreeNode root) {
-        List<List<Integer>> res = new ArrayList<>();
-        if (root == null) return res;
-        List<TreeNode> queue = new LinkedList<>();
-        queue.add(root);
-        while (!queue.isEmpty()) {
-            int n = queue.size();
-            List<Integer> layer = new ArrayList<>();
-            while (n-- != 0) {
-                TreeNode temp = queue.removeFirst();
-                if (temp.left != null) {
-                    queue.add(temp.left);
-                }
-                if (temp.right != null) {
-                    queue.add(temp.right);
-                }
-                layer.add(temp.val);
-            }
-            res.add(layer);
-        }
-        return res;
+    // 递归
+    public boolean isValidBST(TreeNode root) {
+        return isValid(root, Long.MIN_VALUE, Long.MAX_VALUE);
     }
 
+    public boolean isValid(TreeNode root, long minValue, long maxValue) {
+        if (root == null) return true;
+        if (root.val <= minValue || root.val >= maxValue) return false;
+        return isValid(root.left, minValue, root.val) && isValid(root.right, root.val, maxValue);
+    }
+
+    // 中序遍历
+    // long min = Long.MIN_VALUE;
+    // public boolean isValidBST(TreeNode root) {
+    //     if (root == null) return true;
+    //
+    //     if (!isValidBST(root.left)) {
+    //         return false;
+    //     }
+    //
+    //     if (root.val <= min) return false;
+    //
+    //     min = root.val;
+    //
+    //     return isValidBST(root.right);
+    // }
 
     public static void main(String[] args) {
 
         Solution s = new Solution();
 
-        TreeNode a = new TreeNode(1);
-        TreeNode b = new TreeNode(2);
-        TreeNode c = new TreeNode(2);
-        TreeNode d = new TreeNode(2);
-        TreeNode e = new TreeNode(2);
+        TreeNode a = new TreeNode(5);
+        TreeNode b = new TreeNode(4);
+        TreeNode c = new TreeNode(6);
+        TreeNode d = new TreeNode(3);
+        TreeNode e = new TreeNode(7);
         TreeNode f = new TreeNode(4);
         TreeNode g = new TreeNode(3);
 
 
         a.left = b;
         a.right = c;
-        b.left = d;
-        b.right = e;
-        c.left = f;
-        c.right = g;
+        // b.left = d;
+        // b.right = e;
+        c.left = d;
+        c.right = e;
 
-        System.out.println(s.levelOrder(a));
+        System.out.println(s.isValidBST(a));
     }
 }
 
