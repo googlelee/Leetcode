@@ -1,30 +1,48 @@
+import java.util.*;
+
 class Solution {
-    // 递归
-    public boolean isValidBST(TreeNode root) {
-        return isValid(root, Long.MIN_VALUE, Long.MAX_VALUE);
-    }
-
-    public boolean isValid(TreeNode root, long minValue, long maxValue) {
-        if (root == null) return true;
-        if (root.val <= minValue || root.val >= maxValue) return false;
-        return isValid(root.left, minValue, root.val) && isValid(root.right, root.val, maxValue);
-    }
-
-    // 中序遍历
-    // long min = Long.MIN_VALUE;
-    // public boolean isValidBST(TreeNode root) {
-    //     if (root == null) return true;
-    //
-    //     if (!isValidBST(root.left)) {
-    //         return false;
+    // bfs
+    // public List<Integer> rightSideView(TreeNode root) {
+    //     List<Integer> res = new ArrayList<>();
+    //     if (root == null) return res;
+    //     List<TreeNode> queue = new LinkedList<>();
+    //     queue.add(root);
+    //     while (!queue.isEmpty()) {
+    //         int size = queue.size();
+    //         while (size != 0) {
+    //             TreeNode peek = queue.removeFirst();
+    //             if (size == 1) {
+    //                 res.add(peek.val);
+    //             }
+    //             size--;
+    //             if (peek.left != null) {
+    //                 queue.add(peek.left);
+    //             }
+    //             if (peek.right != null) {
+    //                 queue.add(peek.right);
+    //             }
+    //         }
     //     }
-    //
-    //     if (root.val <= min) return false;
-    //
-    //     min = root.val;
-    //
-    //     return isValidBST(root.right);
+    //     return res;
     // }
+
+    // dfs
+    List<Integer> res = new ArrayList<>();
+
+    public List<Integer> rightSideView(TreeNode root) {
+        dfs(root, 1);
+        return res;
+    }
+
+    private void dfs(TreeNode root, int depth) {
+        if (root == null) return;
+        if (depth > res.size()) {
+            res.add(root.val);
+        }
+        dfs(root.right, depth + 1);
+        dfs(root.left, depth + 1);
+    }
+
 
     public static void main(String[] args) {
 
@@ -39,14 +57,14 @@ class Solution {
         TreeNode g = new TreeNode(3);
 
 
-        a.left = b;
+        // a.left = b;
         a.right = c;
         // b.left = d;
         // b.right = e;
-        c.left = d;
-        c.right = e;
+        // c.left = d;
+        // c.right = e;
 
-        System.out.println(s.isValidBST(a));
+        System.out.println(s.rightSideView(a));
     }
 }
 
