@@ -1,31 +1,34 @@
 import java.util.ArrayList;
+import java.util.NavigableMap;
 import java.util.concurrent.ForkJoinPool;
 import java.util.jar.JarEntry;
 
 class Solution {
-    public int minPathSum(int[][] grid) {
-        int[][] cost = new int[grid.length][grid[0].length];
-        cost[0][0] = grid[0][0];
-        for (int i = 1; i < grid.length; i++) {
-            cost[i][0] = cost[i - 1][0] + grid[i][0];
-        }
-        for (int j = 1; j < grid[0].length; j++) {
-            cost[0][j] = cost[0][j - 1] + grid[0][j];
-        }
-        for (int i = 1; i < grid.length; i++) {
-            for (int j = 1; j < grid[0].length; j++) {
-                cost[i][j] = grid[i][j] + Math.min(cost[i - 1][j], cost[i][j - 1]);
+    public int rob(int[] nums) {
+        if (nums.length == 1) return nums[0];
+        if (nums.length == 2) return Math.max(nums[0], nums[1]);
+        int[] cnt = new int[nums.length];
+        cnt[0] = nums[0];
+        cnt[1] = nums[1];
+        int res = Math.max(cnt[0], cnt[1]);
+        for (int i = 2; i < nums.length; i++) {
+            // 第i个位置的最大值应该为i-2个之前的最大值
+            int max = 0;
+            for (int j = i - 2; j >= 0 ; j--) {
+                if (max < cnt[j]) max = cnt[j];
             }
+            cnt[i] = max + nums[i];
+            if (res < cnt[i]) res = cnt[i];
         }
-        return cost[cost.length - 1][cost[0].length - 1];
+        return res;
     }
 
     public static void main(String[] args) {
 
         Solution s = new Solution();
 
-        int[][] nums = {{1, 3, 1}, {1, 5, 1}, {4, 2, 1}};
-        // int[][] nums = {{1}};
-        System.out.println(s.minPathSum(nums));
+        int[] nums = {2,1,1,2};
+
+        System.out.println(s.rob(nums));
     }
 }
