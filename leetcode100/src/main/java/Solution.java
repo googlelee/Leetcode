@@ -1,28 +1,34 @@
 class Solution {
-    public int findDuplicate(int[] nums) {
-        int left = 1, right = nums.length - 1;
-        while (left < right) {
-            int mid = (left + right) / 2;
-            int cnt = 0;
-            for (int num : nums) {
-                if (num <= mid) cnt++;
-            }
-            if (cnt > mid) {
-                right = mid;
+    // 将整个区间分成(0,p0)(p0,i)(p1,nums.length - 1)
+    public void sortColors(int[] nums) {
+        int p0 = 0, p1 = nums.length - 1;
+        int i = 0;
+        while (i <= p1) {
+            if (nums[i] == 2) {
+                swapNums(nums, i, p1);
+                p1--;
+            } else if (nums[i] == 1) {
+                i++;
             } else {
-                left = mid + 1;
+                swapNums(nums, i, p0);
+                p0++;
+                i++;
             }
         }
-        return left;
     }
 
+    private void swapNums(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
 
     public static void main(String[] args) {
 
         Solution s = new Solution();
 
-        int[] nums = {3, 1, 3, 4, 2};
-        System.out.println(s.findDuplicate(nums));
-
+        int[] nums = {2,0,2,1,1,0};
+        s.sortColors(nums);
+        for (int num : nums) System.out.println(num);
     }
 }
