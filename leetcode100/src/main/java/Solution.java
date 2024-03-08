@@ -1,40 +1,22 @@
-import java.util.*;
-
 class Solution {
 
-    public List<Integer> findAnagrams(String s, String p) {
-        List<Integer> res = new ArrayList<>();
-        int l = 0;
-        int len = p.length();
-        int end = s.length() - p.length();
-        if (end < 0) return new ArrayList<>();  // 边界
-        int[] pCnt = new int[26];
-        int[] sCnt = new int[26];
-        for (int i = 0; i < len; i++) {
-            pCnt[p.charAt(i) - 'a']++;
-        }
-
-        for (int i = 0; i < len; i++) {
-            sCnt[s.charAt(i) - 'a']++;
-        }
-
-        while (l <= end) {
-            if (Arrays.equals(pCnt, sCnt)) {
-                res.add(l);
+    public int subarraySum(int[] nums, int k) {
+        int res = 0;
+        for (int i = 0; i < nums.length; i++) {
+            int sum = 0;
+            for (int j = i; j < nums.length; j++) {
+                sum += nums[j];
+                if (sum == k) {
+                    res++;
+                    // break; {-1,1,0} 正确为3 break是2
+                }
             }
-            sCnt[s.charAt(l) - 'a']--;
-            if (l + len < s.length()) { // 边界
-                sCnt[s.charAt(l + len) - 'a']++;
-            }
-            l++;
         }
         return res;
     }
-
     public static void main(String[] args) {
         Solution s = new Solution();
-        String str = "aaaaaaaaaa";
-        String p = "aaaaaaaaaaaaa";
-        System.out.println(s.findAnagrams(str, p));
+        int[] nums = {1,1,1};
+        System.out.println(s.subarraySum(nums, 2));
     }
 }
