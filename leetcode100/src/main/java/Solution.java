@@ -2,32 +2,25 @@ import java.util.*;
 
 class Solution {
 
-    public List<List<String>> groupAnagrams(String[] strs) {
-        Map<String, List<String>> hashMap = new HashMap<>();
-        for (String str : strs) {
-            int[] cnt = new int[26];
-            for (int j = 0; j < str.length(); j++) {
-                cnt[str.charAt(j) - 'a']++;
-            }
-            StringBuilder sb = new StringBuilder();
-            for (int j = 0; j < 26; j++) {
-                if (cnt[j] > 0) {
-                    sb.append("#");
-                    char c = (char) ('a' + j);
-                    sb.append(c);
-                    sb.append(cnt[j]);
+    public int lengthOfLongestSubstring(String s) {
+        int l = 0, r = 0, res = 0;
+        if (s == null) return 0;
+        if (s.length() < 2) return s.length();
+        while (r < s.length()) {
+            for (int i = l; i < r; i++) {
+                if (s.charAt(i) == s.charAt(r)) {
+                    l = i + 1;
                 }
             }
-            List<String> list = hashMap.getOrDefault(sb.toString(), new ArrayList<>());
-            list.add(str);
-            hashMap.put(sb.toString(), list);
+            if (res < r - l + 1) res = r - l + 1;
+            r++;
         }
-        return new ArrayList<>(hashMap.values());
+        return res;
     }
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        String[] strs = {"bdddddddddd","bbbbbbbbbbc"};
-        System.out.println(s.groupAnagrams(strs));
+        String str = "abcabcbb";
+        System.out.println(s.lengthOfLongestSubstring(str));
     }
 }
