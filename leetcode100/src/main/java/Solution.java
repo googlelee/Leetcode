@@ -2,29 +2,30 @@ import java.util.*;
 
 class Solution {
 
-    public int[] productExceptSelf(int[] nums) {
-        int[] leftRight = new int[nums.length];
-        int[] rightLeft = new int[nums.length];
-        leftRight[0] = nums[0];
-        rightLeft[nums.length - 1] = nums[nums.length - 1];
-        for (int i = 1; i < nums.length; i++) {
-            leftRight[i] = leftRight[i - 1] * nums[i];
-        }
-        for (int i = nums.length - 2; i >= 0 ; i--) {
-            rightLeft[i] = rightLeft[i + 1] * nums[i];
-        }
-        int[] res = new int[nums.length];
-        res[0] = rightLeft[1];
-        res[nums.length - 1] = leftRight[nums.length - 2];
-        for (int i = 1; i < nums.length - 1; i++) {
-            res[i] = leftRight[i - 1] * rightLeft[i + 1];
+    public List<Integer> spiralOrder(int[][] matrix) {
+        List<Integer> res = new ArrayList<>();
+        int[] dy = {1, 0, -1, 0};
+        int[] dx = {0, 1, 0, -1};
+        int m = matrix.length, n = matrix[0].length;
+        int x = 0, y = 0, d = 0;
+        for (int i = 0; i < m * n; i++) {
+            res.add(matrix[x][y]);
+            matrix[x][y] = 101;
+            int newX = x + dx[d], newY = y + dy[d];
+            if (newX < 0 || newX >= m || newY < 0 || newY >= n || matrix[newX][newY] == 101) {
+                d = (d + 1) % 4;
+                newX = x + dx[d];
+                newY = y + dy[d];
+            }
+            x = newX;
+            y = newY;
         }
         return res;
     }
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        int[] nums = {1,2};
-        System.out.println(Arrays.toString(s.productExceptSelf(nums)));
+        int[][] nums = {{1,2,3}, {4,5,6}, {7,8,9}};
+        System.out.println(s.spiralOrder(nums));
     }
 }
