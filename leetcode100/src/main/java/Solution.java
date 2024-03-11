@@ -1,36 +1,30 @@
+import java.security.interfaces.RSAKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.NavigableMap;
 
 class Solution {
-    public List<List<Integer>> permute(int[] nums) {
+    public List<List<Integer>> subsets(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> item = new ArrayList<>();
-        int[] mark = new int[nums.length];
-        dfs(nums, 0, item, mark, res);
+        res.add(new ArrayList<>());
+        backtrace(nums, 0, item, res);
         return res;
     }
 
-    private void dfs(int[] nums, int i, List<Integer> item, int[] mark, List<List<Integer>> res) {
-        if (i == nums.length) {
-            // 新对象保存
-            res.add(new ArrayList<>(item));
-            return;
-        }
-        for (int j = 0; j < nums.length; j++) {
-            if (mark[j] == 0) {
-                item.add(nums[j]);
-                mark[j] = 1;
-                dfs(nums, i + 1, item, mark, res);
-                mark[j] = 0;
-                item.removeLast();
-            }
-        }
+    private void backtrace(int[] nums, int i, List<Integer> item, List<List<Integer>> res) {
+        if (i == nums.length) return;
+        item.add(nums[i]);
+        res.add(new ArrayList<>(item));
+        backtrace(nums, i + 1, item, res);
+        item.removeLast();
+        backtrace(nums, i + 1, item, res);
     }
 
     public static void main(String[] args) {
         Solution s = new Solution();
         int[] nums = {1, 2, 3};
-        System.out.println(s.permute(nums));
+        System.out.println(s.subsets(nums));
     }
 }
