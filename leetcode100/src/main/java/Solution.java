@@ -10,19 +10,20 @@ class Solution {
     }
 
     private void backtrace(int[] candidates, int target, int i, int sum, List<Integer> item, List<List<Integer>> res) {
-        if (i == candidates.length || sum > target) {
+        if (sum >= target) {
             if (sum == target) {
                 res.add(new ArrayList<>(item));
             }
             return;
         }
-
-        item.add(candidates[i]);
-        sum += candidates[i];
-        backtrace(candidates, target, i, sum, item, res);
-        sum -= candidates[i];
-        item.removeLast();
-        backtrace(candidates, target, i + 1, sum, item, res);
+        for (int j = i; j < candidates.length; j++) {
+            if (candidates[j] > target) continue;
+            item.add(candidates[j]);
+            sum += candidates[j];
+            backtrace(candidates, target, j, sum, item, res);
+            sum -= candidates[j];
+            item.removeLast();
+        }
     }
 
     public static void main(String[] args) {
