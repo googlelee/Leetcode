@@ -1,30 +1,33 @@
-import java.security.interfaces.RSAKey;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.NavigableMap;
 
 class Solution {
-    public List<List<Integer>> subsets(int[] nums) {
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> item = new ArrayList<>();
-        res.add(new ArrayList<>());
-        backtrace(nums, 0, item, res);
+        backtrace(candidates, target, 0, 0, item, res);
         return res;
     }
 
-    private void backtrace(int[] nums, int i, List<Integer> item, List<List<Integer>> res) {
-        if (i == nums.length) return;
-        item.add(nums[i]);
-        res.add(new ArrayList<>(item));
-        backtrace(nums, i + 1, item, res);
+    private void backtrace(int[] candidates, int target, int i, int sum, List<Integer> item, List<List<Integer>> res) {
+        if (i == candidates.length || sum > target) {
+            if (sum == target) {
+                res.add(new ArrayList<>(item));
+            }
+            return;
+        }
+
+        item.add(candidates[i]);
+        sum += candidates[i];
+        backtrace(candidates, target, i, sum, item, res);
+        sum -= candidates[i];
         item.removeLast();
-        backtrace(nums, i + 1, item, res);
+        backtrace(candidates, target, i + 1, sum, item, res);
     }
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        int[] nums = {1, 2, 3};
-        System.out.println(s.subsets(nums));
+        int[] nums = {2,3,6,7};
+        System.out.println(s.combinationSum(nums, 7));
     }
 }
