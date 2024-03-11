@@ -1,41 +1,50 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
 class Solution {
-    public boolean exist(char[][] board, String word) {
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[0].length; j++) {
-                StringBuilder stringBuilder = new StringBuilder();
-                boolean[][] mark = new boolean[board.length][board[0].length];
-                if (backtrace(board, mark, i, j, word, 0, stringBuilder)) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    String[] str = new String[]{"(", ")"};
+
+    public List<String> generateParenthesis(int n) {
+        List<String> res = new ArrayList<>();
+        StringBuilder item = new StringBuilder();
+        backtrace(n * 2, item, res);
+        return res;
     }
 
-    private boolean backtrace(char[][] board, boolean[][] mark, int i, int j, String word, int k, StringBuilder stringBuilder) {
-        if (k == word.length() || i >= board.length || j >= board[0].length || i < 0 || j < 0 || stringBuilder.toString().equals(word)) {
-            return stringBuilder.toString().equals(word);
+    private void backtrace(int len, StringBuilder item, List<String> res) {
+        if (item.length() >= len) {
+            if (item.length() == len && isValid(item)) {
+                res.add(new String(item));
+            }
+            return;
         }
-        int[] dx = {0, 1, 0, -1};
-        int[] dy = {1, 0, -1, 0};
-        if (!mark[i][j] && board[i][j] == word.charAt(k)) {
-            stringBuilder.append(word.charAt(k));
-            mark[i][j] = true;
-            for (int l = 0; l < 4; l++) {
-                if (backtrace(board, mark, i + dx[l], j + dy[l], word, k+1, stringBuilder)) {
-                    return true;
+        for (String s : str) {
+            item.append(s);
+            backtrace(len, item, res);
+            item.deleteCharAt(item.length() - 1);
+        }
+    }
+
+    private boolean isValid(StringBuilder item) {
+        Stack<Character> stack = new Stack<>();
+        for (int i = 0; i < item.length(); i++) {
+            if (stack.isEmpty()) {
+                stack.push(item.charAt(i));
+            } else {
+                if (item.charAt(i) == ')' && stack.peek() == '(') {
+                    stack.pop();
+                } else {
+                    stack.push(item.charAt(i));
                 }
             }
-            mark[i][j] = false;
-            stringBuilder.deleteCharAt(stringBuilder.length() - 1);
         }
-        return false;
+        return stack.isEmpty();
     }
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        char[][] board = {{'C', 'A', 'A'}, {'A', 'A', 'A'}, {'B', 'C', 'D'}};
-        System.out.println(s.exist(board, "AAB"));
+        System.out.println(s.generateParenthesis(3));
     }
 }
 
