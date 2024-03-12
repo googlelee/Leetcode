@@ -2,43 +2,27 @@ import javax.swing.plaf.metal.MetalIconFactory;
 import java.util.*;
 
 class Solution {
-    public boolean canFinish(int numCourses, int[][] prerequisites) {
-        if (prerequisites.length == 0) return true;
-        int[] in = new int[numCourses]; // 每个课的入度
-        Map<Integer, List<Integer>> pre = new HashMap<>(); // 每个课对应的后续课
-        for (int i = 0; i < prerequisites.length; i++) {
-            List<Integer> list = pre.getOrDefault(prerequisites[i][1], new ArrayList<>());
-            list.add(prerequisites[i][0]);
-            pre.put(prerequisites[i][1], list);
-            in[prerequisites[i][0]]++;
-        }
-
-        List<Integer> queue = new LinkedList<>();
-        for (int i = 0; i < numCourses; i++) {
-            if (in[i] == 0) queue.add(i);
-        }
-
-        while (!queue.isEmpty()) {
-            int course = queue.removeFirst();
-            List<Integer> preList = pre.get(course);
-            if (preList == null) continue;
-            for (int num : preList) {
-                in[num]--;
-                if (in[num] == 0) queue.add(num);
+    public int search(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        while (left < right) {
+            int mid = (left + right) / 2;
+            if (nums[left] <= nums[mid]) {
+                if (target >= nums[left] && target <= nums[mid]) right = mid;
+                else left = mid + 1;
+            } else {
+                if (target > nums[mid] && target <= nums[right]) left = mid + 1;
+                else right = mid;
             }
         }
-
-
-        for (int i = 0; i < numCourses; i++) {
-            if (in[i] != 0) return false;
+        if (nums[left] == target) {
+            return left;
         }
-
-        return true;
+        return -1;
     }
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        int[][] grid = {{0, 10}, {3, 18}, {5, 5}, {6, 11}, {11, 14}, {13, 1}, {15, 1}, {17, 4}};
-        System.out.println(s.canFinish(20, grid));
+        int[] nums = {4,5,6,7,0,1,2};
+        System.out.println(s.search(nums, 0));
     }
 }
