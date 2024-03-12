@@ -2,27 +2,22 @@ import javax.swing.plaf.metal.MetalIconFactory;
 import java.util.*;
 
 class Solution {
-    public int search(int[] nums, int target) {
+    public int findMin(int[] nums) {
         int left = 0, right = nums.length - 1;
+        // 因为互不相同且递增 所以是严格递增
+        // 一旦旋转过后必有 nums[0] > nums[nums.length - 1]
+        if (nums[0] <= nums[nums.length - 1]) return nums[0];
         while (left < right) {
             int mid = (left + right) / 2;
-            if (nums[left] <= nums[mid]) {
-                if (target >= nums[left] && target <= nums[mid]) right = mid;
-                else left = mid + 1;
-            } else {
-                if (target > nums[mid] && target <= nums[right]) left = mid + 1;
-                else right = mid;
-            }
+            if (nums[mid] < nums[0]) right = mid;
+            else left = mid + 1;
         }
-        if (nums[left] == target) {
-            return left;
-        }
-        return -1;
+        return nums[left];
     }
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        int[] nums = {4,5,6,7,0,1,2};
-        System.out.println(s.search(nums, 0));
+        int[] nums = {3, 4, 5, 1, 2};
+        System.out.println(s.findMin(nums));
     }
 }
