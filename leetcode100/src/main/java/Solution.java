@@ -1,52 +1,44 @@
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import javax.swing.plaf.metal.MetalIconFactory;
+import java.util.*;
 
 class Solution {
-    public int orangesRotting(int[][] grid) {
-        List<int[]> queue = new LinkedList<>();
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
-                if (grid[i][j] == 2) {
-                    queue.add(new int[]{i, j});
-                    grid[i][j] = -1;
-                }
-            }
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        if (prerequisites.length == 0) return true;
+        int[] in = new int[numCourses]; // 每个课的入度
+        Map<Integer, List<Integer>> pre = new HashMap<>(); // 每个课对应的后续课
+        for (int i = 0; i < prerequisites.length; i++) {
+            List<Integer> list = pre.getOrDefault(prerequisites[i][1], new ArrayList<>());
+            list.add(prerequisites[i][0]);
+            pre.put(prerequisites[i][1], list);
+            in[prerequisites[i][0]]++;
         }
-        int[] dx = {0, 1, 0, -1};
-        int[] dy = {1, 0, -1, 0};
-        int depth = -1;
+
+        List<Integer> queue = new LinkedList<>();
+        for (int i = 0; i < numCourses; i++) {
+            if (in[i] == 0) queue.add(i);
+        }
+
         while (!queue.isEmpty()) {
-            int size = queue.size();
-            depth++;
-            for (int i = 0; i < size; i++) {
-                int[] d = queue.removeFirst();
-                int x = d[0];
-                int y = d[1];
-                for (int j = 0; j < 4; j++) {
-                    int newX = x + dx[j];
-                    int newY = y + dy[j];
-                    if (newX >= 0 && newX < grid.length && newY >= 0 && newY < grid[0].length && grid[newX][newY] == 1) {
-                        queue.add(new int[]{newX, newY});
-                        grid[newX][newY] = -1;
-                    }
-                }
+            int course = queue.removeFirst();
+            List<Integer> preList = pre.get(course);
+            if (preList == null) continue;
+            for (int num : preList) {
+                in[num]--;
+                if (in[num] == 0) queue.add(num);
             }
         }
 
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
-                if (grid[i][j] == 1) {
-                    return -1;
-                }
-            }
+
+        for (int i = 0; i < numCourses; i++) {
+            if (in[i] != 0) return false;
         }
-        return Math.max(depth, 0); // {{0}}
+
+        return true;
     }
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        int[][] grid = {{2, 2}, {1, 1}, {0, 0}, {2, 0}};
-        System.out.println(s.orangesRotting(grid));
+        int[][] grid = {{0, 10}, {3, 18}, {5, 5}, {6, 11}, {11, 14}, {13, 1}, {15, 1}, {17, 4}};
+        System.out.println(s.canFinish(20, grid));
     }
 }
