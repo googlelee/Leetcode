@@ -2,22 +2,48 @@ import javax.swing.plaf.metal.MetalIconFactory;
 import java.util.*;
 
 class Solution {
-    public int findMin(int[] nums) {
-        int left = 0, right = nums.length - 1;
-        // 因为互不相同且递增 所以是严格递增
-        // 一旦旋转过后必有 nums[0] > nums[nums.length - 1]
-        if (nums[0] <= nums[nums.length - 1]) return nums[0];
-        while (left < right) {
-            int mid = (left + right) / 2;
-            if (nums[mid] < nums[0]) right = mid;
-            else left = mid + 1;
+
+    public String decodeString(String s) {
+        Stack<Character> stack = new Stack<>();
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == ']') {
+                StringBuilder sb = new StringBuilder();
+                while (stack.peek() != '[') {
+                    sb.append(stack.pop());
+                }
+                sb.reverse();
+                stack.pop(); // 去掉左括号
+                StringBuilder num = new StringBuilder();
+                while (!stack.isEmpty() && !(stack.peek() >= 'a' && stack.peek() <= 'z') && stack.peek() != '[') {
+                    num.append(stack.pop());
+                }
+                num.reverse();
+                int n = Integer.parseInt(num.toString());
+
+                StringBuilder item = new StringBuilder();
+                for (int j = 0; j < n; j++) {
+                    item.append(sb);
+                }
+
+                for (int j = 0; j < item.length(); j++) {
+                    stack.push(item.charAt(j));
+                }
+
+            } else {
+                stack.push(s.charAt(i));
+            }
         }
-        return nums[left];
+
+        StringBuilder res = new StringBuilder();
+        while (!stack.isEmpty()) {
+            res.append(stack.pop());
+        }
+        res.reverse();
+        return res.toString();
     }
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        int[] nums = {3, 4, 5, 1, 2};
-        System.out.println(s.findMin(nums));
+        System.out.println(s.decodeString("3[z]2[2[y]pq4[2[jk]e1[f]]]ef"));
     }
 }
