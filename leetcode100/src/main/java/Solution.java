@@ -3,41 +3,23 @@ import java.util.*;
 
 class Solution {
 
-    public String decodeString(String s) {
-        Stack<Character> stack = new Stack<>();
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == ']') {
-                StringBuilder sb = new StringBuilder();
-                while (stack.peek() != '[') {
-                    sb.insert(0, stack.pop());
-                }
-                stack.pop(); // 去掉左括号
-                StringBuilder num = new StringBuilder();
-                while (!stack.isEmpty() && !(stack.peek() >= 'a' && stack.peek() <= 'z') && stack.peek() != '[') {
-                    num.insert(0, stack.pop());
-                }
-                int n = Integer.parseInt(num.toString());
+    public int longestCommonSubsequence(String text1, String text2) {
+        int[][] dp = new int[text1.length() + 1][text2.length() + 1];
 
-                StringBuilder item = new StringBuilder();
-                for (int j = 0; j < n; j++) {
-                    for (int k = 0; k < sb.length(); k++) {
-                        stack.push(sb.charAt(k));
-                    }
+        for (int i = 1; i < text1.length() + 1; i++) {
+            for (int j = 1; j < text2.length() + 1; j++) {
+                if (text1.charAt(i- 1) == text2.charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1;
+                } else {
+                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
                 }
-            } else {
-                stack.push(s.charAt(i));
             }
         }
-
-        StringBuilder res = new StringBuilder();
-        while (!stack.isEmpty()) {
-            res.insert(0, stack.pop());
-        }
-        return res.toString();
+        return dp[text1.length()][text2.length()];
     }
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        System.out.println(s.decodeString("3[a]2[bc]"));
+        System.out.println(s.longestCommonSubsequence("psnw", "vozsh"));
     }
 }
