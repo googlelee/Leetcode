@@ -1,63 +1,48 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 class Solution {
 
-    List<TreeNode> path;
+    public List<String> letterCombinations(String digits) {
+        Map<Character, char[]> hashMap = new HashMap<>();
+        hashMap.put('2', new char[]{'a', 'b', 'c'});
+        hashMap.put('3', new char[]{'d', 'e', 'f'});
+        hashMap.put('4', new char[]{'g', 'h', 'i'});
+        hashMap.put('5', new char[]{'j', 'k', 'l'});
+        hashMap.put('6', new char[]{'m', 'n', 'o'});
+        hashMap.put('7', new char[]{'p', 'q', 'r', 's'});
+        hashMap.put('8', new char[]{'t', 'u', 'v'});
+        hashMap.put('9', new char[]{'w', 'x', 'y', 'z'});
 
-    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        List<TreeNode> pPath = new ArrayList<>();
-        List<TreeNode> qPath = new ArrayList<>();
-        dfs(root, p, pPath);
-        pPath = path;
-        path = null;
-        dfs(root, q, qPath);
-        qPath = path;
-        TreeNode res = null;
-        for (int i = 0; i < Math.min(pPath.size(), qPath.size()); i++) {
-            if (pPath.get(i) == qPath.get(i)) res = path.get(i);
+        StringBuilder sb = new StringBuilder();
+        List<String> res = new ArrayList<>();
+        for (int i = 0; i < digits.length(); i++) {
+            char[] chars = hashMap.get(digits.charAt(i));
+            if (res.isEmpty()) {
+                for (int j = 0; j < chars.length; j++) {
+                    res.add(String.valueOf(chars[j]));
+                }
+            } else {
+                int pos = 0;
+                ArrayList<String> tmp = new ArrayList<>();
+                for (int k = 0; k < res.size(); k++) {
+                    String oldStr = res.get(k);
+                    for (int j = 0; j < chars.length; j++) {
+                        String newStr = oldStr + chars[j];
+                        tmp.add(newStr);
+                    }
+                }
+                res = new ArrayList<>(tmp);
+            }
         }
         return res;
     }
 
-    private void dfs(TreeNode root, TreeNode target, List<TreeNode> path) {
-        if (root == null || this.path != null) {
-            return;
-        }
-        path.add(root);
-        if (root == target) {
-            this.path = new ArrayList<>(path);
-            return;
-        }
-        dfs(root.left, target, path);
-        dfs(root.right, target, path);
-        path.removeLast();
-    }
-
     public static void main(String[] args) {
         Solution s = new Solution();
-
-        TreeNode a = new TreeNode(3);
-        TreeNode b = new TreeNode(5);
-        TreeNode c = new TreeNode(1);
-        TreeNode d = new TreeNode(6);
-        TreeNode e = new TreeNode(2);
-        TreeNode f = new TreeNode(0);
-        TreeNode g = new TreeNode(8);
-        TreeNode h = new TreeNode(7);
-        TreeNode i = new TreeNode(4);
-
-
-        a.left = b;
-        a.right = c;
-        b.left = d;
-        b.right = e;
-        c.left = f;
-        c.right = g;
-        d.left = g;
-        e.left = h;
-        e.right = i;
-
-        System.out.println(s.lowestCommonAncestor(a, b, i).val);
+        String digits = "";
+        System.out.println(s.letterCombinations(digits));
     }
 }
