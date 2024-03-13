@@ -9,26 +9,21 @@ class Solution {
             if (s.charAt(i) == ']') {
                 StringBuilder sb = new StringBuilder();
                 while (stack.peek() != '[') {
-                    sb.append(stack.pop());
+                    sb.insert(0, stack.pop());
                 }
-                sb.reverse();
                 stack.pop(); // 去掉左括号
                 StringBuilder num = new StringBuilder();
                 while (!stack.isEmpty() && !(stack.peek() >= 'a' && stack.peek() <= 'z') && stack.peek() != '[') {
-                    num.append(stack.pop());
+                    num.insert(0, stack.pop());
                 }
-                num.reverse();
                 int n = Integer.parseInt(num.toString());
 
                 StringBuilder item = new StringBuilder();
                 for (int j = 0; j < n; j++) {
-                    item.append(sb);
+                    for (int k = 0; k < sb.length(); k++) {
+                        stack.push(sb.charAt(k));
+                    }
                 }
-
-                for (int j = 0; j < item.length(); j++) {
-                    stack.push(item.charAt(j));
-                }
-
             } else {
                 stack.push(s.charAt(i));
             }
@@ -36,14 +31,13 @@ class Solution {
 
         StringBuilder res = new StringBuilder();
         while (!stack.isEmpty()) {
-            res.append(stack.pop());
+            res.insert(0, stack.pop());
         }
-        res.reverse();
         return res.toString();
     }
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        System.out.println(s.decodeString("3[z]2[2[y]pq4[2[jk]e1[f]]]ef"));
+        System.out.println(s.decodeString("3[a]2[bc]"));
     }
 }
