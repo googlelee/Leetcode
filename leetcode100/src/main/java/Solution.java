@@ -1,25 +1,29 @@
-import javax.swing.plaf.metal.MetalIconFactory;
+import javax.management.relation.InvalidRoleInfoException;
 import java.util.*;
 
 class Solution {
 
-    public int longestCommonSubsequence(String text1, String text2) {
-        int[][] dp = new int[text1.length() + 1][text2.length() + 1];
-
-        for (int i = 1; i < text1.length() + 1; i++) {
-            for (int j = 1; j < text2.length() + 1; j++) {
-                if (text1.charAt(i- 1) == text2.charAt(j - 1)) {
-                    dp[i][j] = dp[i - 1][j - 1] + 1;
-                } else {
-                    dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
-                }
-            }
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        Map<Integer, Integer> hashMap = new HashMap<>();
+        for (int i = 0; i < inorder.length; i++) {
+            hashMap.put(inorder[i], i);
         }
-        return dp[text1.length()][text2.length()];
+        return build(preorder, inorder, 0, preorder.length - 1, 0, inorder.length - 1, hashMap);
+    }
+
+    private TreeNode build(int[] preorder, int[] inorder, int pl, int pr, int il, int ir, Map<Integer, Integer> hashMap) {
+        if (pl > pr) return null;
+        TreeNode root = new TreeNode(preorder[pl]);
+        int rootPos = hashMap.get(root.val);
+        root.left = build(preorder, inorder, pl + 1, pl + rootPos - il, il, rootPos - 1, hashMap);
+        root.right = build(preorder, inorder, pl + rootPos - il + 1, pr, rootPos + 1, ir, hashMap);
+        return root;
     }
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        System.out.println(s.longestCommonSubsequence("psnw", "vozsh"));
+        int[] preorder = {3, 9, 20, 15, 7};
+        int[] inorder = {9, 3, 15, 20, 7};
+        System.out.println(s.buildTree(preorder, inorder));
     }
 }
