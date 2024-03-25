@@ -3,16 +3,16 @@ import java.util.Map;
 
 class LRUCache {
 
-    Map<Integer, ListNode> hashMap;
+    Map<Integer, BiListNode> hashMap;
     int capacity;
-    ListNode head;
-    ListNode tail;
+    BiListNode head;
+    BiListNode tail;
 
     public LRUCache(int capacity) {
         this.capacity = capacity;
         hashMap = new HashMap<>();
-        head = new ListNode(-1, -1);
-        tail = new ListNode(-2, -2, head, null);
+        head = new BiListNode(-1, -1);
+        tail = new BiListNode(-2, -2, head, null);
         head.next = tail;
     }
 
@@ -27,7 +27,7 @@ class LRUCache {
     }
 
     private void moveToHead(int key) {
-        ListNode tmp = hashMap.get(key);
+        BiListNode tmp = hashMap.get(key);
         tmp.pre.next = tmp.next;
         tmp.next.pre = tmp.pre;
         tmp.pre = head;
@@ -46,7 +46,7 @@ class LRUCache {
                 this.capacity++;
             }
             this.capacity--;
-            ListNode node = new ListNode(key, value, head.next);
+            BiListNode node = new BiListNode(key, value, head.next);
             node.pre = head;
             head.next.pre = node;
             head.next = node;
@@ -70,25 +70,25 @@ class LRUCache {
 }
 
 
-class ListNode {
+class BiListNode {
     int key;
     int value;
-    ListNode pre;
-    ListNode next;
+    BiListNode pre;
+    BiListNode next;
 
-    public ListNode(int key, int value) {
+    public BiListNode(int key, int value) {
         this.key = key;
         this.value = value;
     }
 
-    public ListNode(int key, int value, ListNode pre, ListNode next) {
+    public BiListNode(int key, int value, BiListNode pre, BiListNode next) {
         this.key = key;
         this.value = value;
         this.pre = pre;
         this.next = next;
     }
 
-    public ListNode(int key, int value, ListNode next) {
+    public BiListNode(int key, int value, BiListNode next) {
         this.key = key;
         this.value = value;
         this.next = next;
