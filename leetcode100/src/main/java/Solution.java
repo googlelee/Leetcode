@@ -1,70 +1,46 @@
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.PriorityQueue;
 
 class Solution {
 
     public ListNode mergeKLists(ListNode[] lists) {
         ListNode pre = new ListNode(-1);
         ListNode p = pre;
-        Map<Integer, ListNode> hashMap = new HashMap<>();
+        PriorityQueue<ListNode> queue = new PriorityQueue<>(Comparator.comparingInt(a -> a.val));
         for (int i = 0; i < lists.length; i++) {
-            hashMap.put(i, lists[i]);
+            ListNode tmp = lists[i];
+            while (tmp != null) {
+                queue.add(new ListNode(tmp.val)); // 不能直接加入tmp，会成环
+                tmp = tmp.next;
+            }
+        }
+        while (!queue.isEmpty()) {
+            p.next = queue.poll();
+            p = p.next;
         }
 
-        while (!hashMap.isEmpty()) {
-            int min = 10001;
-            ListNode minNode = null;
-            int pos = -1;
-            for (int i = 0; i < hashMap.size(); i++) {
-                ListNode tmp = hashMap.get(i);
-                if (tmp == null) {
-                    continue;
-                }
-                if (tmp.val < min) {
-                    min = tmp.val;
-                    minNode = tmp;
-                    pos = i;
-                }
-            }
-            if (minNode != null) {
-                p.next = minNode;
-                p = p.next;
-                if (p == null) {
-                    hashMap.remove(pos);
-                } else {
-                    hashMap.put(pos, minNode.next);
-                }
-            }
-            if (hashMap.values().stream().allMatch(x -> x == null)) {
-                break;
-            }
-        }
         return pre.next;
     }
 
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        ListNode a = new ListNode(1);
-        ListNode b = new ListNode(4);
-        ListNode c = new ListNode(5);
+        ListNode a = new ListNode(-2);
+        ListNode b = new ListNode(-1);
+        ListNode c = new ListNode(-1);
+        ListNode d = new ListNode(-1);
 
-        ListNode d = new ListNode(1);
-        ListNode e = new ListNode(3);
-        ListNode f = new ListNode(4);
+        ListNode e = null;
 
-        ListNode g = new ListNode(2);
-        ListNode h = new ListNode(6);
 
         a.next = b;
         b.next = c;
+        c.next = d;
 
-        d.next = e;
-        e.next = f;
 
-        g.next = h;
-
-        ListNode[] lists = {a, d, g};
+        ListNode[] lists = {a, e};
 
         System.out.println(s.mergeKLists(lists));
     }
