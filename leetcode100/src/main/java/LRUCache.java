@@ -1,96 +1,76 @@
-import java.util.HashMap;
-import java.util.Map;
+/**
+ * 思路：如果没有过期机制 这个题的key和value数都不大 直接数组来做hash表即可
+ * 这个题的难点就在于过期机制  而且put和get还得是O(1)
+ * 也就是说还是得借助hash表  不然实现不了这个复杂度
+ * 过期机制还要保证这个复杂度 只能用链表 单链表不行 因为单链表无法删除尾部节点  所以需要双链表
+ *
+ * 综上总体思路就是  数组保存key和链表节点  链表实现过期机制
+ */
 
 class LRUCache {
 
-    Map<Integer, BiListNode> hashMap;
+    BiListNode[] nodes = new BiListNode[10001];
     int capacity;
-    BiListNode head;
-    BiListNode tail;
+    int size;
+
+    BiListNode head = new BiListNode(-1, -1, null, null);
+    BiListNode tail = new BiListNode(-1, -1, null, null);
+
 
     public LRUCache(int capacity) {
         this.capacity = capacity;
-        hashMap = new HashMap<>();
-        head = new BiListNode(-1, -1);
-        tail = new BiListNode(-2, -2, head, null);
         head.next = tail;
+        tail.pre = head;
     }
 
     public int get(int key) {
-        int val = -1;
-        if (hashMap.get(key) != null) {
-            val = hashMap.get(key).value;
-            moveToHead(key);
+        if (size == 0) {
+            return -1;
         }
-        System.out.println(val);
-        return val;
-    }
+        BiListNode node = nodes[key];
+        if (node == null) {
+            System.out.println(-1);
+            return -1;
+        } else {
+            System.out.println(node.val);
+            node.pre.next = node.next;
+            node.next.pre = node.pre;
 
-    private void moveToHead(int key) {
-        BiListNode tmp = hashMap.get(key);
-        tmp.pre.next = tmp.next;
-        tmp.next.pre = tmp.pre;
-        tmp.pre = head;
-        tmp.next = head.next;
-        head.next.pre = tmp;
-        head.next = tmp;
-        hashMap.put(key, tmp);
+            node.pre = head;
+            node.next = head.next;
+            head.next.pre = node;
+            head.next = node;
+            return node.val;
+        }
     }
 
     public void put(int key, int value) {
-        if (hashMap.get(key) == null) {
-            if (this.capacity == 0) {
-                hashMap.remove(tail.pre.key);
+        BiListNode node = nodes[key];
+        if (node == null) {
+            if (size == capacity) {
+                nodes[tail.pre.key] = null;
                 tail.pre.pre.next = tail;
                 tail.pre = tail.pre.pre;
-                this.capacity++;
+                size -= 1;
             }
-            this.capacity--;
-            BiListNode node = new BiListNode(key, value, head.next);
-            node.pre = head;
-            head.next.pre = node;
-            head.next = node;
-            hashMap.put(key, node);
+
+            BiListNode temp = new BiListNode(key, value, head, head.next);
+            head.next.pre = temp;
+            head.next = temp;
+            nodes[key] = temp;
+            size += 1;
+
         } else {
-            hashMap.get(key).value = value; // 边界
-            moveToHead(key);
+            node.val = value;
+            if (!node.pre.equals(head)) {
+                node.pre.next = node.next;
+                node.next.pre = node.pre;
+
+                node.pre = head;
+                node.next = head.next;
+                head.next.pre = node;
+                head.next = node;
+            }
         }
-
-    }
-
-    public static void main(String[] args) {
-        LRUCache lRUCache = new LRUCache(2);
-        lRUCache.put(2, 1); // 缓存是 {1=1}
-        lRUCache.put(2, 2); // 缓存是 {1=1, 2=2}
-        lRUCache.get(2);    // 返回 1
-        lRUCache.put(1, 1); // 该操作会使得关键字 2 作废，缓存是 {1=1, 3=3}
-        lRUCache.put(4, 1); // 该操作会使得关键字 2 作废，缓存是 {1=1, 3=3}
-        lRUCache.get(2);    // 返回 -1 (未找到)
-    }
-}
-
-
-class BiListNode {
-    int key;
-    int value;
-    BiListNode pre;
-    BiListNode next;
-
-    public BiListNode(int key, int value) {
-        this.key = key;
-        this.value = value;
-    }
-
-    public BiListNode(int key, int value, BiListNode pre, BiListNode next) {
-        this.key = key;
-        this.value = value;
-        this.pre = pre;
-        this.next = next;
-    }
-
-    public BiListNode(int key, int value, BiListNode next) {
-        this.key = key;
-        this.value = value;
-        this.next = next;
     }
 }

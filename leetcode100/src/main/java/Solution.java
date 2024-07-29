@@ -1,24 +1,15 @@
 class Solution {
 
-    public int[] sortArray(int[] nums) {
-        int len = nums.length;
-        for (int i = 0; i < len; i++) {
-            for (int j = i + 1; j < len; j++) {
-                if (nums[i] > nums[j]) {
-                    int temp = nums[i];
-                    nums[i] = nums[j];
-                    nums[j] = temp;
-                }
-            }
-        }
-        return nums;
-    }
-
     public static void main(String[] args) {
-        int[] nums = {1,2,5,4,3};
-        new Solution().sortArray(nums);
-        for (int i = 0; i < nums.length; i++) {
-            System.out.println(nums[i]);
-        }
+        LRUCache lRUCache = new LRUCache(2);
+        lRUCache.put(1, 1); // 缓存是 {1=1}
+        lRUCache.put(2, 2); // 缓存是 {1=1, 2=2}
+        lRUCache.get(1);    // 返回 1
+        lRUCache.put(3, 3); // 该操作会使得关键字 2 作废，缓存是 {1=1, 3=3}
+        lRUCache.get(2);    // 返回 -1 (未找到)
+        lRUCache.put(4, 4); // 该操作会使得关键字 1 作废，缓存是 {4=4, 3=3}
+        lRUCache.get(1);    // 返回 -1 (未找到)
+        lRUCache.get(3);    // 返回 3
+        lRUCache.get(4);    // 返回 4
     }
 }
