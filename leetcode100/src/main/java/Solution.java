@@ -1,15 +1,30 @@
 class Solution {
 
+    public int[] sortArray(int[] nums) {
+        int[] cnt = new int[100001];
+
+        for (int i = 0; i < nums.length; i++) {
+            cnt[nums[i] + 50000] += 1;
+        }
+
+        int[] res = new int[nums.length];
+        int index = 0;
+        for (int i = 0; i < cnt.length; i++) {
+            for(int j = 0; j < cnt[i]; j++) {
+                res[index] = i - 50000;
+                index++;
+            }
+        }
+
+        return res;
+    }
+
     public static void main(String[] args) {
-        LRUCache lRUCache = new LRUCache(2);
-        lRUCache.put(1, 1); // 缓存是 {1=1}
-        lRUCache.put(2, 2); // 缓存是 {1=1, 2=2}
-        lRUCache.get(1);    // 返回 1
-        lRUCache.put(3, 3); // 该操作会使得关键字 2 作废，缓存是 {1=1, 3=3}
-        lRUCache.get(2);    // 返回 -1 (未找到)
-        lRUCache.put(4, 4); // 该操作会使得关键字 1 作废，缓存是 {4=4, 3=3}
-        lRUCache.get(1);    // 返回 -1 (未找到)
-        lRUCache.get(3);    // 返回 3
-        lRUCache.get(4);    // 返回 4
+        Solution s = new Solution();
+        int[] nums = {5,2,3,1};
+        int[] res = s.sortArray(nums);
+        for (int i = 0; i < res.length; i++) {
+            System.out.println(res[i]);
+        }
     }
 }
