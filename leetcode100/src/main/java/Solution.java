@@ -1,22 +1,29 @@
 class Solution {
-
     public int[] sortArray(int[] nums) {
-        int[] cnt = new int[100001];
+        mergeSort(nums, 0, nums.length - 1);
+        return nums;
+    }
 
-        for (int i = 0; i < nums.length; i++) {
-            cnt[nums[i] + 50000] += 1;
-        }
-
-        int[] res = new int[nums.length];
-        int index = 0;
-        for (int i = 0; i < cnt.length; i++) {
-            for(int j = 0; j < cnt[i]; j++) {
-                res[index] = i - 50000;
-                index++;
+    private void mergeSort(int[] nums, int l, int r) {
+        if (l >= r) return;
+        int mid = (l + r) >> 1;
+        mergeSort(nums, l, mid);
+        mergeSort(nums, mid + 1, r);
+        int i = l, j = mid + 1;
+        int[] temp = new int[r - l + 1];
+        int k = 0;
+        while (i <= mid && j <= r) {
+            if (nums[i] <= nums[j]) {
+                temp[k++] = nums[i++];
+            } else {
+                temp[k++] = nums[j++];
             }
         }
-
-        return res;
+        while (i <= mid) { temp[k++] = nums[i++]; }
+        while (j <= r) { temp[k++] = nums[j++]; }
+        for (int m = 0, n = l; m < temp.length; m++, n++) {
+            nums[n] = temp[m];
+        }
     }
 
     public static void main(String[] args) {
