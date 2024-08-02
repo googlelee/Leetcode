@@ -1,37 +1,28 @@
 class Solution {
-    public int[] sortArray(int[] nums) {
-        mergeSort(nums, 0, nums.length - 1);
-        return nums;
-    }
-
-    private void mergeSort(int[] nums, int l, int r) {
-        if (l >= r) return;
-        int mid = (l + r) >> 1;
-        mergeSort(nums, l, mid);
-        mergeSort(nums, mid + 1, r);
-        int i = l, j = mid + 1;
-        int[] temp = new int[r - l + 1];
-        int k = 0;
-        while (i <= mid && j <= r) {
-            if (nums[i] <= nums[j]) {
-                temp[k++] = nums[i++];
+    public void merge(int[] nums1, int m, int[] nums2, int n) {
+        int[] temp = new int[nums1.length];
+        int i = 0, j = 0, k = 0;
+        while (i < m && j < n) {
+            if (nums1[i] < nums2[j]) {
+                temp[k++] = nums1[i++];
             } else {
-                temp[k++] = nums[j++];
+                temp[k++] = nums2[j++];
             }
         }
-        while (i <= mid) { temp[k++] = nums[i++]; }
-        while (j <= r) { temp[k++] = nums[j++]; }
-        for (int m = 0, n = l; m < temp.length; m++, n++) {
-            nums[n] = temp[m];
+        while (i < m) temp[k++] = nums1[i++];
+        while (j < n) temp[k++] = nums2[j++];
+        for (int l = 0; l < m + n; l++) {
+            nums1[l] = temp[l];
         }
     }
+
 
     public static void main(String[] args) {
         Solution s = new Solution();
-        int[] nums = {5,2,3,1};
-        int[] res = s.sortArray(nums);
-        for (int i = 0; i < res.length; i++) {
-            System.out.println(res[i]);
+        int[] nums1 = {1, 2, 3, 0, 0, 0}, nums2 = {2, 5, 6};
+        s.merge(nums1, 3, nums2, 3);
+        for (int i = 0; i < nums1.length; i++) {
+            System.out.println(nums1[i]);
         }
     }
 }
