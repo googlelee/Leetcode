@@ -1,28 +1,57 @@
+import java.util.*;
+
 class Solution {
-    public void merge(int[] nums1, int m, int[] nums2, int n) {
-        int[] temp = new int[nums1.length];
-        int i = 0, j = 0, k = 0;
-        while (i < m && j < n) {
-            if (nums1[i] < nums2[j]) {
-                temp[k++] = nums1[i++];
-            } else {
-                temp[k++] = nums2[j++];
+    public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+        List<TreeNode> queue = new LinkedList<>();
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        queue.add(root);
+        int depth = 0;
+        while (!queue.isEmpty()) {
+            // 最巧妙之处就在于用size控制逐层遍历
+            int size = queue.size();
+            depth += 1;
+            List<Integer> list = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = queue.removeFirst();
+                if (node.left != null) {
+                    queue.add(node.left);
+                }
+                if (node.right != null) {
+                    queue.add(node.right);
+                }
+                list.add(node.val);
             }
+            if (depth % 2 == 0) {
+                Collections.reverse(list);
+            }
+            result.add(list);
         }
-        while (i < m) temp[k++] = nums1[i++];
-        while (j < n) temp[k++] = nums2[j++];
-        for (int l = 0; l < m + n; l++) {
-            nums1[l] = temp[l];
-        }
+        return result;
     }
 
-
     public static void main(String[] args) {
+
         Solution s = new Solution();
-        int[] nums1 = {1, 2, 3, 0, 0, 0}, nums2 = {2, 5, 6};
-        s.merge(nums1, 3, nums2, 3);
-        for (int i = 0; i < nums1.length; i++) {
-            System.out.println(nums1[i]);
-        }
+
+        TreeNode a = new TreeNode(1);
+        TreeNode b = new TreeNode(2);
+        TreeNode c = new TreeNode(2);
+        TreeNode d = new TreeNode(2);
+        TreeNode e = new TreeNode(2);
+        TreeNode f = new TreeNode(4);
+        TreeNode g = new TreeNode(3);
+
+
+        a.left = b;
+        a.right = c;
+        b.left = d;
+        b.right = e;
+        c.left = f;
+        c.right = g;
+
+        System.out.println(s.zigzagLevelOrder(a));
     }
 }
