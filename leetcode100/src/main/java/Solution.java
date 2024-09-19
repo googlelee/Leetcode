@@ -1,65 +1,77 @@
-import java.util.*;
-
 class Solution {
-    // 思路 ： 获取节点路径 最后一个相同的节点就是结果
-    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        List<TreeNode> pPath = new ArrayList<>();
-        List<TreeNode> path = new ArrayList<>();
-        dfs(root, p, path, pPath);
-        List<TreeNode> qPath = new ArrayList<>();
-        dfs(root, q, path, qPath);
-        TreeNode result = null;
-        for (int i = 0; i < Math.min(pPath.size(), qPath.size()); i++) {
-            if (pPath.get(i) != qPath.get(i)) {
-                return result;
+    public ListNode reverseKGroup(ListNode head, int k) {
+        if (k == 1) return head;
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode tail = dummy;
+        ListNode front = dummy;
+        while (head != null) {
+            int cnt = k;
+            while (cnt > 0) {
+                if (tail != null) {
+                    tail = tail.next;
+                    cnt--;
+                } else {
+                    front.next = head;
+                    return dummy.next;
+                }
+            }
+            if (tail != null) {
+                ListNode back = tail.next;
+
+                cnt = k;
+                ListNode newHead = null;
+                ListNode newTail = head;
+                while (cnt > 0) {
+                    ListNode temp = head.next;
+                    head.next = newHead;
+                    newHead = head;
+                    head = temp;
+                    cnt--;
+                }
+
+                front.next = newHead;
+                newTail.next = back;
+
+                tail = head;
+                front = newTail;
             } else {
-                result = pPath.get(i);
+
+                ListNode newhead = null;
+                while (head != null) {
+                    ListNode temp = head.next;
+                    head.next = newhead;
+                    newhead = head;
+                    head = temp;
+                }
+                front.next = newhead;
+                return dummy.next;
             }
         }
-        return result;
-    }
 
-    private void dfs(TreeNode root, TreeNode p, List<TreeNode> path, List<TreeNode> ans) {
-        if (root == p) {
-            ans.addAll(path);
-            ans.add(root);
-            return;
-        }
-        path.add(root);
-        if (root.left != null) {
-            dfs(root.left, p, path, ans);
-        }
-        if (root.right != null) {
-            dfs(root.right, p, path, ans);
-        }
-        path.remove(root);
-    }
 
+        return dummy.next;
+    }
 
     public static void main(String[] args) {
+
         Solution s = new Solution();
 
-        TreeNode a = new TreeNode(3);
-        TreeNode b = new TreeNode(5);
-        TreeNode c = new TreeNode(1);
-        TreeNode d = new TreeNode(6);
-        TreeNode e = new TreeNode(2);
-        TreeNode f = new TreeNode(0);
-        TreeNode g = new TreeNode(8);
-        TreeNode h = new TreeNode(7);
-        TreeNode i = new TreeNode(4);
+        ListNode a = new ListNode(1);
+        ListNode b = new ListNode(2);
+        ListNode c = new ListNode(3);
+        ListNode d = new ListNode(4);
+        ListNode e = new ListNode(5);
 
+        a.next = b;
+        b.next = c;
+        c.next = d;
+        // d.next = e;
 
-        a.left = b;
-        a.right = c;
-        b.left = d;
-        b.right = e;
-        c.left = f;
-        c.right = g;
-        d.left = g;
-        e.left = h;
-        e.right = i;
-
-        System.out.println(s.lowestCommonAncestor(a, b, i).val);
+        ListNode res = s.reverseKGroup(a, 2);
+        while (res != null) {
+            System.out.println(res.val);
+            res = res.next;
+        }
     }
 }
