@@ -1,77 +1,103 @@
+import java.util.ArrayList;
+import java.util.List;
+
 class Solution {
-    public ListNode reverseKGroup(ListNode head, int k) {
-        if (k == 1) return head;
-        ListNode dummy = new ListNode(0);
-        dummy.next = head;
-        ListNode tail = dummy;
-        ListNode front = dummy;
-        while (head != null) {
-            int cnt = k;
-            while (cnt > 0) {
-                if (tail != null) {
-                    tail = tail.next;
-                    cnt--;
-                } else {
-                    front.next = head;
-                    return dummy.next;
-                }
+    public int[] sortArray(int[] nums) {
+
+        // mergeSort(nums, 0, nums.length - 1);
+
+        // quickSort(nums, 0, nums.length - 1);
+
+        // 非递归快排 用队列保存数组边界
+        List<int[]> range = new ArrayList<>();
+        range.add(new int[]{0, nums.length - 1});
+
+        while (!range.isEmpty()) {
+            int l = range.getFirst()[0];
+            int r = range.getFirst()[1];
+            range.removeFirst();
+            int i = l, j = r, p = nums[l];
+            int k = i;
+            while (k <= j) {
+                if (nums[k] < p) {
+                    swap(nums, k++, i++);
+                } else if (nums[k] > p) {
+                    swap(nums, k, j--);
+                } else k++;
             }
-            if (tail != null) {
-                ListNode back = tail.next;
+            if (i - 1 > l) range.add(new int[]{l, i - 1});
+            if (r - 1 > j) range.add(new int[]{j + 1, r});
+        }
+        return nums;
+    }
 
-                cnt = k;
-                ListNode newHead = null;
-                ListNode newTail = head;
-                while (cnt > 0) {
-                    ListNode temp = head.next;
-                    head.next = newHead;
-                    newHead = head;
-                    head = temp;
-                    cnt--;
-                }
+    private void swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
 
-                front.next = newHead;
-                newTail.next = back;
 
-                tail = head;
-                front = newTail;
-            } else {
-
-                ListNode newhead = null;
-                while (head != null) {
-                    ListNode temp = head.next;
-                    head.next = newhead;
-                    newhead = head;
-                    head = temp;
-                }
-                front.next = newhead;
-                return dummy.next;
+    private void quickSort(int[] nums, int l, int r) {
+        if (l >= r) return;
+        int p = nums[(l + r) >> 1];
+        int i = l, j = r;
+        while (i < j) {
+            while (nums[i] < p) {
+                i++;
+            }
+            while (nums[j] > p) {
+                j--;
+            }
+            if (i < j) {
+                int temp = nums[i];
+                nums[i] = nums[j];
+                nums[j] = temp;
+                i++;
+                j--;
             }
         }
+        quickSort(nums, l, j);
+        quickSort(nums, j + 1, r);
+    }
 
-
-        return dummy.next;
+    private void mergeSort(int[] nums, int l, int r) {
+        if (l >= r) return;
+        int mid = (l + r) >> 1;
+        mergeSort(nums, l, mid);
+        mergeSort(nums, mid + 1, r);
+        int[] temp = new int[r - l + 1];
+        int i = 0, j = l, k = mid + 1;
+        for (; i < r - l + 1 && j < mid + 1 && k <= r; i++) {
+            if (nums[j] < nums[k]) {
+                temp[i] = nums[j];
+                j++;
+            } else {
+                temp[i] = nums[k];
+                k++;
+            }
+        }
+        while (j < mid + 1) {
+            temp[i] = nums[j];
+            j++;
+            i++;
+        }
+        while (k <= r) {
+            temp[i] = nums[k];
+            k++;
+            i++;
+        }
+        for (int m = 0; m <= r - l; m++) {
+            nums[l + m] = temp[m];
+        }
     }
 
     public static void main(String[] args) {
-
-        Solution s = new Solution();
-
-        ListNode a = new ListNode(1);
-        ListNode b = new ListNode(2);
-        ListNode c = new ListNode(3);
-        ListNode d = new ListNode(4);
-        ListNode e = new ListNode(5);
-
-        a.next = b;
-        b.next = c;
-        c.next = d;
-        // d.next = e;
-
-        ListNode res = s.reverseKGroup(a, 2);
-        while (res != null) {
-            System.out.println(res.val);
-            res = res.next;
+        int[] nums = {-4, 0, 7, 4, 9, -5, -1, 0, -7, -1};
+        Solution solution = new Solution();
+        int[] result = solution.sortArray(nums);
+        for (int i = 0; i < result.length; i++) {
+            System.out.println(result[i]);
         }
     }
 }
